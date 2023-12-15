@@ -11,12 +11,12 @@ Two examples of it's usefulness:
 
 With the high-level functionality exposed by xtbf, the water/octanol
 partitioning coefficient can be computed within below 20 lines of code:
-```
+```python
 from xtbf import run_xtb
 from xtbf.parsers import total_energy
 
 def xtb_logp_ow(mol) -> float:
-    """python
+    """
     Computes the octanol/water partitioning coefficient logP_ow
     or None in case any computation fails.
     Takes an rdkit molecule as input.
