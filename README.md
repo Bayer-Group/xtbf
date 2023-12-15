@@ -16,7 +16,7 @@ from xtbf import run_xtb
 from xtbf.parsers import total_energy
 
 def xtb_logp_ow(mol) -> float:
-    """
+    """python
     Computes the octanol/water partitioning coefficient logP_ow
     or None in case any computation fails.
     Takes an rdkit molecule as input.
@@ -40,7 +40,7 @@ and already gives good qualitative results:
 <img src="/doc/log_p_parity_plot.png" width="300">
 
 using the following code to evaluate:
-```
+```python
 from smal.all import *
 import seaborn as sns
 
@@ -64,7 +64,7 @@ data=data_logp, x="pred_logp", y="logp",
 
 ## \#2 Example: Partial Charges
 The following example shows how to compute partial charges:
-```
+```python
     >>> from xtbf import *
     >>> from xtbf.shortcuts import *
     >>> mol = Chem.MolFromSmiles("NCCCO")
