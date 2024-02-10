@@ -1,5 +1,5 @@
 doctests:
-	pytest . --doctest-modules
+	pytest . --doctest-modules 
 
 doc-html:
 	export PDOC_ALLOW_EXEC=1

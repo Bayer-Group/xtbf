@@ -221,3 +221,19 @@ def hydrolysis_atom_vector_2(mol,cache=None)->np.ndarray:
         else:
             hydrolysis_ens.append(NO_REACTION)
     return (HA_TO_KCAL * (np.array(hydrolysis_ens) - ENERGY_WATER)).clip(CLAMP_LOW,CLAMP_HIGH)
+
+
+
+def calc_fukui_indices(mol, cache=None) -> np.array:
+    """
+    >>> calc_fukui_indices(Chem.MolFromSmiles("[B](F)(F)(F)"))
+    array([[0.015, 0.268, 0.142],
+        [0.335, 0.243, 0.289],
+        [0.319, 0.244, 0.282],
+        [0.33 , 0.244, 0.287]])
+    """
+    success,output = run_xtb("--alpb water --vfukui", mol, 1, cache=cache)
+    if success:
+        return fukui_indices(output)
+    else:
+        return None

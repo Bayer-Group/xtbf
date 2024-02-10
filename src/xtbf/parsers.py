@@ -81,3 +81,44 @@ def total_energy(txt:str) -> float:
 
     return rslts[-1]
             
+
+def _test_fukui_indices():
+    return """
+     #        f(+)     f(-)     f(0)
+     1B       0.015    0.268    0.142
+     2F       0.335    0.243    0.289
+     3F       0.319    0.244    0.282
+     4F       0.330    0.244    0.287
+"""
+
+import numpy as np
+def fukui_indices(txt:str) -> "np.array":
+    """
+    
+    >>> fukui_indices(_test_fukui_indices())
+    array([[0.015, 0.268, 0.142],
+        [0.335, 0.243, 0.289],
+        [0.319, 0.244, 0.282],
+        [0.33 , 0.244, 0.287]])
+    """
+    enter = False
+    pat = re.compile("\S+\s+(\S+)\s+(\S+)\s+(\S+)")
+    fs = []
+    for lne in txt.split("\n"):
+        lne = lne.strip()
+        if lne == "#        f(+)     f(-)     f(0)":
+            enter = True
+        elif enter:
+            rslt = re.match(pat,lne)
+            if rslt:
+                fs.append([float(rslt.group(g)) for g in [1,2,3]])
+            else:
+                enter = False
+                continue
+    if fs:
+        return np.array(fs)
+    else:
+        return None
+        
+
+    
