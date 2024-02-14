@@ -237,3 +237,25 @@ def calc_fukui_indices(mol, cache=None) -> np.array:
         return fukui_indices(output)
     else:
         return None
+
+
+
+def xtb_logp_ow(mol, cache=None) -> float:
+    """
+    Computes the octanol/water partitioning coefficient logP_ow
+    or None in case any computation fails.
+    Takes an rdkit molecule as input.
+    """
+    en_success, en_water = run_xtb("--alpb water",mol,1,cache=cache)
+    if not en_success:
+        return None
+    en_water = total_energy(en_water)
+    en_success, en_octanol = run_xtb("--alpb octanol",mol,1,cache=cache)
+    if not en_success:
+        return None
+    en_octanol = total_energy(en_octanol)
+
+    en_delta = en_water - en_octanol
+    k = 3.166811563E-6
+    T = 298
+    return - np.log10( np.e ** ( - en_delta / (k * T)) )
