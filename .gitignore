@@ -1,2 +1,6 @@
 *.pyc
 data/
+.DS_Store
+.eggs/
+dist/
+xtbf.egg-info/
