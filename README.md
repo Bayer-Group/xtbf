@@ -92,6 +92,26 @@ The following example shows how to compute partial charges:
 
 
 # Getting Started
+Installation is possible via pip
+```bash
+pip install xtbf
+```
+
+To run XTB-related functionality, XTB needs to be installed from:
+```
+https://github.com/grimme-lab/xtb/releases
+```
+or alternatively via conda:
+```
+conda install -c conda-forge xtb
+```
+(see here: https://anaconda.org/conda-forge/xtb)
+
+To run the iupac-to-smiles conversion, opsin needs to be installed:
+```bash
+conda install bioconda::opsin
+```
+
 
 ## Dependencies
 You need to have the following minimal dependencies:
@@ -110,15 +130,6 @@ alternatively, run from make:
 make install-deps
 ```
 
-Furthermore, XTB needs to be installed from:
-```
-https://github.com/grimme-lab/xtb/releases
-```
-or alternatively via conda:
-```
-conda install -c conda-forge xtb
-```
-(see here: https://anaconda.org/conda-forge/xtb)
 
 For documentation gen, pdoc needs to be installed:
 ```
