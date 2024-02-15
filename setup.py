@@ -1,14 +1,14 @@
 from setuptools import setup
 
 setup(
-    name='pyexample',
-    version='0.1.0',    
+    name='xtbf',
+    version='0.1.1',    
     description='A minimal, functional interface to the semiempirical extended tight-binding (xtb) program',
     url='https://github.com/Bayer-Group/xtbf',
     author='Jan Wollschläger',
     author_email='janmwoll@gmail.com',
     license='BSD 3-clause',
-    packages=['xtbf'],
+    packages=['xtbf','smal'],
     install_requires=[
         'joblib', 'tqdm','numpy', 'pandas',
     ],

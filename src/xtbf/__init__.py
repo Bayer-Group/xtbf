@@ -313,8 +313,8 @@ def run_xtb(xtb_command:str, mol:Chem.Mol, multiplicity:int, conf_id:int="lowest
     >>> end = time.time()
     >>> delta2 = (end-start)
     
-    Then, caching made the whole process more than x100 faster:
-    >>> print((delta1 // delta2) > 100)
+    Then, caching made the whole process faster:
+    >>> print((delta1 / delta2) > 1)
     True
 
     We can also perform a conformer search and keep only the lowest

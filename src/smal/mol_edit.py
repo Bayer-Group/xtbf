@@ -235,6 +235,7 @@ def all_hydrolysis_candidates_2(mol: Chem.Mol, only_atm_idx=None) -> "list[Chem.
 
     >>> mol = from_smi("CC(=O)OC")
     >>> [to_smi((cand)) for cand in all_hydrolysis_candidates_2(mol)]
+    ['COC(C)(O)O']
     """
     N = mol.GetNumAtoms()
     for atm_idx in range(N):
