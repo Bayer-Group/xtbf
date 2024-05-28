@@ -249,8 +249,8 @@ def all_hydrolysis_candidates_2(mol: Chem.Mol, only_atm_idx=None) -> "list[Chem.
         else:
             # This atom could (potentially) by hydroxylated
             for bnd in atm.GetBonds():
-                if round(bnd.GetBondTypeAsDouble()) != 2:
-                    continue  # only break double bonds...
+                if round(bnd.GetBondTypeAsDouble()) not in [2,3]:
+                    continue  # only break double/triple bonds...
 
                 [other_idx] = list(
                     {bnd.GetBeginAtomIdx(), bnd.GetEndAtomIdx()} - {atm_idx}

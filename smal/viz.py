@@ -30,6 +30,44 @@ from PIL.Image import Image
 import math
 import random
 from typing import List
+from rdkit import Chem
+from rdkit.Chem.Draw import rdMolDraw2D
+import io
+from PIL import Image
+from collections import defaultdict
+
+def highlight_mol(mol,atom_colors:list=None,atom_radii:list=None,bond_colors:list=None,width=350,height=400) -> str:
+
+    if atom_radii is None:
+        atom_radii = [0.3 for _ in mol.GetAtoms()]
+    if atom_colors is None:
+        atom_colors = [(0.,0.,0.,0.) for _ in mol.GetAtoms()]
+    if bond_colors is None:
+        bond_colors = [(0.,0.,0.,0.) for _ in mol.GetBonds()]
+
+    assert len(atom_colors) == mol.GetNumAtoms()
+    assert len(bond_colors) == mol.GetNumBonds()
+    assert all(len(col) == 4 for col in atom_colors+bond_colors)
+
+    athighlights = defaultdict(list)
+    arads = {}
+    for a in mol.GetAtoms():
+        aid = a.GetIdx()
+        athighlights[aid].append(atom_colors[aid])
+        arads[aid] = atom_radii[aid]
+
+    bndhighlights = defaultdict(list)
+    for bond in mol.GetBonds():
+        aid1 = bond.GetBeginAtomIdx()
+        aid2 = bond.GetEndAtomIdx()
+        bid = mol.GetBondBetweenAtoms(aid1,aid2).GetIdx()
+        bndhighlights[bid].append(bond_colors[bid])
+
+    d2d = rdMolDraw2D.MolDraw2DCairo(width,height)
+    d2d.DrawMoleculeWithHighlights(mol,"",dict(athighlights),dict(bndhighlights),arads,{})
+    d2d.FinishDrawing()
+    bio = io.BytesIO(d2d.GetDrawingText())
+    return Image.open(bio)
 
 
 def mol_to_svg(mol, save_as=None, width=300, height=300) -> Path:

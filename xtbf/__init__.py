@@ -108,8 +108,7 @@ XTB_TMP_DIR = TMP_ROOT / Path("xtbf")
 
 XTB_OUTER_JOBS = min(32,multiprocessing.cpu_count()-1)
 XTB_INNER_JOBS = 1
-XTB_TIMEOUT_SECONDS = 1200 # 20 minutes
-
+XTB_TIMEOUT_SECONDS = int(os.environ.get("XTBF_TIMEOUT",1200)) # 20 minutes
 
 
 def temp_dir():
@@ -214,7 +213,10 @@ def cache_load(obj_id:str, cache:Path):
         return None
 
 def _obj_id_to_fle(obj_id:str, cache:Path,) -> Path:
-    obj_hash = hashlib.sha1(obj_id.encode("utf-8"), usedforsecurity=False,).hexdigest()
+    try:
+        obj_hash = hashlib.sha1(obj_id.encode("utf-8"), usedforsecurity=False,).hexdigest()
+    except:
+        obj_hash = hashlib.sha1(obj_id.encode("utf-8"),).hexdigest()
     sub_dir_0 = obj_hash[0:3]
     sub_dir_1 = obj_hash[3:6]
     obj_fle = cache / sub_dir_0 / sub_dir_1 / obj_hash
@@ -286,7 +288,7 @@ def _determine_min_conf_id(mol):
     return min_conf_id
 
 
-def run_xtb(xtb_command:str, mol:Chem.Mol, multiplicity:int, conf_id:int="lowest", cache=None,):
+def run_xtb(xtb_command:str, mol:Chem.Mol, multiplicity:int, conf_id:int="lowest", cache=None, store_failures=True, charge:int=0,):
     """
 
     >>> mol = Chem.MolFromSmiles("CCCOCCC")
@@ -342,15 +344,24 @@ def run_xtb(xtb_command:str, mol:Chem.Mol, multiplicity:int, conf_id:int="lowest
         if stored_result is not None:
             return stored_result
         else:
+            if str(os.environ.get("XTBF_SKIP_CALCS", None)) in ("1","t","T","True","true"):
+                return None
+            
             if conf_id == "lowest":
                 mol = embed_multi_keep_lowest(mol,100)
                 conf_id = _determine_min_conf_id(mol)
             mol, xyz_string = mol_to_xyzstring(mol,conf_id=conf_id)
-            rslt = run_xtb_xyz(xtb_command=xtb_command,xyz_string=xyz_string, multiplicity=multiplicity, )
+            try:
+                rslt = run_xtb_xyz(xtb_command=xtb_command,xyz_string=xyz_string, multiplicity=multiplicity, charge=charge, )
+            except:
+                if store_failures:
+                    rslt = None
+                else:
+                    raise
             cache_store(rslt,obj_id=obj_id,cache=cache)
             return rslt
 
-def run_xtb_xyz(xtb_command:str, xyz_string:str, multiplicity:int, ):
+def run_xtb_xyz(xtb_command:str, xyz_string:str, multiplicity:int, charge:int=0,):
     """
     Runs the given xtb job as identified by
     the following components:
@@ -369,6 +380,10 @@ def run_xtb_xyz(xtb_command:str, xyz_string:str, multiplicity:int, ):
         uhf_arg = f"--uhf {multiplicity} "
     else:
         uhf_arg = ""
+    if charge != 0:
+        chrg_arg = f"--chrg {charge} "
+    else:
+        chrg_arg = ""
     try:
         os.mkdir(job_dir)
         os.chdir(job_dir)
@@ -377,7 +392,7 @@ def run_xtb_xyz(xtb_command:str, xyz_string:str, multiplicity:int, ):
         assert not output_fle.exists()
         with Silencer() as s:
             # alpb_str = ""
-            cmd = f"{BIN_XTB} input.xyz --parallel {XTB_INNER_JOBS} {xtb_command} {uhf_arg}> output.out 2> err.out"
+            cmd = f"{BIN_XTB} input.xyz --parallel {XTB_INNER_JOBS} {xtb_command} {uhf_arg} {chrg_arg}> output.out 2> err.out"
 
             # normal approach:
             # subprocess.check_output(cmd,shell=True,timeout=XTB_TIMEOUT_SECONDS)

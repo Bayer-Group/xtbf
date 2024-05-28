@@ -56,3 +56,4 @@ def ecfp_bin_fingerprint(mol: Chem.Mol) -> np.ndarray:
     """ """
     fpgen = AllChem.GetRDKitFPGenerator()
     return fpgen.GetFingerprintAsNumPy(mol)
+
