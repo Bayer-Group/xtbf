@@ -20,7 +20,11 @@ def remove_atom_at_index(mol: Chem.Mol, atm_idx: int) -> Chem.Mol:
     CCF
     """
     mol = copy.deepcopy(mol)
-    mol.GetAtomWithIdx(atm_idx).SetAtomicNum(0)
+    if isinstance(atm_idx,list) or isinstance(atm_idx,tuple):
+        for ai in atm_idx:
+            mol.GetAtomWithIdx(ai).SetAtomicNum(0)
+    else:
+        mol.GetAtomWithIdx(atm_idx).SetAtomicNum(0)
     mol = Chem.DeleteSubstructs(mol, Chem.MolFromSmarts("[#0]"))
     return mol
 
