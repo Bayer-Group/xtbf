@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='xtbf',
-    version='0.1.2',    
+    version='0.1.3',    
     description='A minimal, functional interface to the semiempirical extended tight-binding (xtb) program',
     url='https://github.com/Bayer-Group/xtbf',
     author='Jan Wollschläger',
