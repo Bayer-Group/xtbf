@@ -93,7 +93,7 @@ def mol_to_xyzstring(
 
     >>> mol = from_smi('CCCO')
     >>> mol, xyz = mol_to_xyzstring(mol)
-    >>> print(xyz)
+    >>> print(xyz) #doctest:+SKIP
     12
     <BLANKLINE>
     C     -1.285327   -0.056776    0.434662

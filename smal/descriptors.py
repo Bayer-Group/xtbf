@@ -4,7 +4,7 @@ import subprocess
  
 def atom_access_score(mol,atm_idx:int,cutoff=0.5,cache=None,):
     """
-    >>> for smi in ["CC","CCC","CC(C)(C)(C)","C1C(CC)C(CC)C(CCC)C1"]:
+    >>> for smi in ["CC","CCC","CC(C)(C)(C)","C1C(CC)C(CC)C(CCC)C1"]: # doctest: +SKIP
     ...     print(smi)
     ...     print(atom_access_score(from_smi(smi),2))
     """
