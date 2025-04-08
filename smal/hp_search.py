@@ -86,7 +86,8 @@ def hp_search_helper(model,df_train,df_val):
     pipe.fit(np.vstack(df['X']),df['y'])
     return pipe.best_estimator_
 
-    
+
+ 
 
 def run_benchmark(model,df:pd.DataFrame,feat_fun,hp_search=None,splt_col="split_5"):
     """
@@ -106,6 +107,16 @@ def run_benchmark(model,df:pd.DataFrame,feat_fun,hp_search=None,splt_col="split_
     Val Test Train Train Train  
     Train Val Test Train Train 
     Train Train Val Test Train  
+
+    Example usage:
+    `
+    df = pd.read_csv("...")
+    for model in [RandomForestRegressor, Lasso]:
+        for feat_fun in [ecfp_count_fingerprint,]:
+            scores,df_preds = run_benchmark()
+    
+    sns.barplot(scores).
+    `      
     
     """
     scores = []
