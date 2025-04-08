@@ -88,11 +88,11 @@ def hp_search_helper(model,df_train,df_val):
 
     
 
-def run_benchmark(model,feat_fun,hp_search=None,splt_col="split_5"):
+def run_benchmark(model,df:pd.DataFrame,feat_fun,hp_search=None,splt_col="split_5"):
     """
     Runs the benchmark on the given model utilizing
-    the given featurizer feat_fun and doing
-    the spliting on the providing splt_col.
+    the given featurizer feat_fun (list[mol] -> list[np.array])
+    and doing the spliting on the provided splt_col.
 
     Here, hp_search is a function that takes a model, the train
     dataframe and the val dataframe and returns a model with
@@ -109,7 +109,6 @@ def run_benchmark(model,feat_fun,hp_search=None,splt_col="split_5"):
     
     """
     scores = []
-    df = pd.read_csv(CVI_DATASET)
     if str(os.environ.get("CVI_DOWNSAMPLE",None)) in ["1","t","T","true","True"]:
         df = df.sample(5000,random_state=123)
     df["mol"] = df["smiles"].apply(else_none(Chem.MolFromSmiles))
